@@ -1,0 +1,36 @@
+{
+  "ReRoutes": [
+    {
+      "DownstreamPathTemplate": "/api/{everything}",
+      "DownstreamScheme": "http",
+      "UpstreamPathTemplate": "/ClientServer1/{everything}",
+      "UpstreamHttpMethod": [ "GET", "POST", "DELETE", "PUT" ],
+      "ServiceName": "ClientServer1", //consul 服务中  的名称
+      "LoadBalancerOptions": {
+        "Type": "LeastConnection"
+      }
+    },
+    {
+      "DownstreamPathTemplate": "/api/{everything}",
+      "DownstreamScheme": "http",
+      "UpstreamPathTemplate": "/ClientServer2/{everything}",
+      "UpstreamHttpMethod": [ "GET", "POST", "DELETE", "PUT" ],
+      "ServiceName": "ClientServer2", //consul 服务中  的名称
+      "LoadBalancerOptions": {
+        "Type": "LeastConnection"
+      }
+    }
+  ],
+  "GlobalConfiguration": {
+    "ServiceDiscoveryProvider": { // Consul 服务发现配置
+      "Host": "localhost", // Consul 地址
+      "Port": 8500, //Consul 默认端口8500
+      "Type": "Consul"
+    }
+  },
+  "QoSOptions": { // Pollly熔断
+    "ExceptionsAllowedBeforeBreaking": 3, //允许多少个异常请求
+    "DurationOfBreak": 5, //熔断的时间，单位为秒
+    "TimeoutValue": 5000 //如果下游请求的处理时间超过多少则自如将请求设置为超时
+  }
+}
